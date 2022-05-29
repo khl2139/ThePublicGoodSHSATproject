@@ -1,0 +1,68 @@
+---
+title: "Leaflet Maps"
+author: "Andrea Tillotson"
+date: "5/23/2022"
+output: html_document
+---
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+points <- read.csv("point_data.csv")
+points_add <- read.csv("point_data_as_csv.csv") %>%
+  unite("Full_Address", 10:12, sep = ", ", remove = FALSE) %>%
+  select(DBN, Full_Address)
+test <- read.csv("full_missing.csv") %>%
+  unite("Full_Address", c(17, 19:20), sep = ", ", remove = FALSE) %>%
+  select(DBN, Full_Address)
+
+full_add <- rbind(points_add, test)
+
+points <- points %>% left_join(full_add)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(ggmap)
+
+#points_geo <- points %>%
+#  mutate_geocode(Full_Address)
+
+#points_geo <- points_geo %>%
+#  mutate(latitute = lat,
+#         longitude = lon)
+
+#writexl::write_xlsx(points_geo, "points_geo.xlsx")
+
+points_geo <- readxl::read_xlsx("points_geo.xlsx")
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(leaflet)
+
+points_geo <- points_geo %>% mutate(offers = case_when(
+  fof_offers == 1 ~ "Five or fewer offers to specialized high schools",
+  fof_offers == 0 ~ "More than five offers to specialized high schools"
+))
+
+pal <- colorFactor("Dark2", domain = points_geo$offers)
+color_offers <- pal(points_geo$offers)
+content <- paste("<font size ='+1'><b>Middle School:</b><br/>", points_geo$MS, "<br/</font size><br/>",
+                 "<b>Borough:</b>", points_geo$Borough,"<br/>",
+                 "<b>Students in testing pool:</b>", points_geo$total_students,"<br/>",
+                 "<b># of students tested:</b>", points_geo$testers_count,"<br/>",
+                 "<b># of students offered spots:</b>", points_geo$total_offers, "<br/>",
+                 "<b>Gifted and talented?</b>", points_geo$G_T, "<br/>",
+                 "<b>High school program?</b>", points_geo$HS_Program, "<br/>",
+                 "<b>Serves citywide?</b>", points_geo$Citywide, "<br/>")
+
+leaflet(points_geo) %>%
+  addProviderTiles("Stamen.TonerLite") %>%
+  addCircles(color = color_offers, popup = content,
+             lat = ~lat, lng = ~lon) %>%
+  addLegend(position = "bottomleft", opacity = 1,
+            pal = pal, values = ~points_geo$offers,
+            title = "<font size = +2>NYC middle schools and SHSAT offers</font size>")
+```

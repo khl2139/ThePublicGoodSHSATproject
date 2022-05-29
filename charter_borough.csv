@@ -1,0 +1,6 @@
+Borough,borough_total,tester_count_high,tester_count_known,total_offered_high,total_offered_known,total_fof_testers,total_fof_offers,perc_tested,perc_offered
+Bronx,1805,625,619,123,18,2,35,34.3,2.9
+Brooklyn,2961,1041,1032,182,29,3,51,34.9,2.8
+Manhattan,1423,517,493,124,25,8,33,34.6,5.1
+Queens,683,268,268,33,9,0,8,39.2,3.4
+Staten Island,146,13,10,6,0,1,2,6.8,0

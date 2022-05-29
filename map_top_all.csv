@@ -1,0 +1,21 @@
+DBN,Dist,loc_code,MS,Borough,CSD,total_students,testers_count,perc_tested,total_offers,perc_tested_offered,fof_testers,fof_offers,G_T,HS_Program,Citywide,stat,lon,lat
+30Q122,30,Q122,P.S. 122 MAMIE FAY (30Q122),Queens,D30,95,90,94.7,60,66.7,0,0,No,No,No,Top 10 in percent of students tested,-73.91604660000002,40.7802866
+02M312,2,M312,NEW YORK CITY LAB MIDDLE SCHOOL FOR COLLABORATIVE STUDIES (02M312),Manhattan,D2,179,169,94.4,117,69.2,0,0,No,No,No,Top 10 in percent of students tested,-74.0026278,40.7424259
+04M012,4,M012,TAG YOUNG SCHOLARS (04M012),Manhattan,D4,57,53,93,26,49.1,0,0,Yes,No,Yes,Top 10 in percent of students tested,-73.9417246,40.7924857
+20K187,20,K187,THE CHRISTA MCAULIFFE SCHOOL\I.S. 187 (20K187),Brooklyn,D20,340,315,92.6,221,70.2,0,0,No,No,No,Top 10 in percent of students tested,-74.0038658,40.6278763
+03M334,3,M334,THE ANDERSON SCHOOL (03M334),Manhattan,D3,60,55,91.7,45,81.8,0,0,Yes,No,Yes,Top 10 in percent of students tested,-73.9779047,40.7810152
+84X364,84,X364,SOUTH BRONX CLASSICAL CHARTER SCHOOL II (84X364),Bronx,Charter,12,11,91.7,0-5,NA,0,1,No,No,No,Top 10 in percent of students tested,-73.9259232,40.8081277
+30Q300,30,Q300,THE 30TH AVENUE SCHOOL (G&T CITYWIDE) (30Q300),Queens,D30,46,42,91.3,24,57.1,0,0,Yes,No,Yes,Top 10 in percent of students tested,-73.9228164,40.7682186
+01M539,1,M539,"NEW EXPLORATIONS INTO SCIENCE, TECHNOLOGY AND MATH HIGH SCHOOL (01M539)",Manhattan,D1,135,116,85.9,76,65.5,0,0,Yes,Yes,Yes,Top 10 in percent of students tested,-74.001007,40.687935
+02M114,2,M114,EAST SIDE MIDDLE SCHOOL (02M114),Manhattan,D2,137,115,83.9,73,63.5,0,0,No,Yes,No,Top 10 in percent of students tested,-73.9475088,40.7804173
+06M223,6,M223,THE MOTT HALL SCHOOL (06M223),Manhattan,D6,92,77,83.7,0-5,NA,0,1,No,No,No,Top 10 in percent of students tested,-73.95265189999999,40.81577679999999
+03M334,3,M334,THE ANDERSON SCHOOL (03M334),Manhattan,D3,60,55,91.7,45,81.8,0,0,Yes,No,Yes,Top 10 in percent of test takers with offers,-73.9779047,40.7810152
+05M362,5,M362,COLUMBIA SECONDARY SCHOOL (05M362),Manhattan,D5,99,20,20.2,15,75,0,0,No,No,No,Top 10 in percent of test takers with offers,-73.95602869999999,40.8106437
+20K187,20,K187,THE CHRISTA MCAULIFFE SCHOOL\I.S. 187 (20K187),Brooklyn,D20,340,315,92.6,221,70.2,0,0,No,No,No,Top 10 in percent of test takers with offers,-74.0038658,40.6278763
+02M255,2,M255,M.S. 255 SALK SCHOOL OF SCIENCE (02M255),Manhattan,D2,125,104,83.2,72,69.2,0,0,No,No,No,Top 10 in percent of test takers with offers,-73.9814913,40.7354745
+02M312,2,M312,NEW YORK CITY LAB MIDDLE SCHOOL FOR COLLABORATIVE STUDIES (02M312),Manhattan,D2,179,169,94.4,117,69.2,0,0,No,No,No,Top 10 in percent of test takers with offers,-74.0026278,40.7424259
+30Q122,30,Q122,P.S. 122 MAMIE FAY (30Q122),Queens,D30,95,90,94.7,60,66.7,0,0,No,No,No,Top 10 in percent of test takers with offers,-73.91604660000002,40.7802866
+01M539,1,M539,"NEW EXPLORATIONS INTO SCIENCE, TECHNOLOGY AND MATH HIGH SCHOOL (01M539)",Manhattan,D1,135,116,85.9,76,65.5,0,0,Yes,Yes,Yes,Top 10 in percent of test takers with offers,-74.001007,40.687935
+02M114,2,M114,EAST SIDE MIDDLE SCHOOL (02M114),Manhattan,D2,137,115,83.9,73,63.5,0,0,No,Yes,No,Top 10 in percent of test takers with offers,-73.9475088,40.7804173
+20K686,20,K686,BROOKLYN SCHOOL OF INQUIRY (20K686),Brooklyn,D20,53,41,77.4,25,61,0,0,No,No,Yes,Top 10 in percent of test takers with offers,-73.9869672,40.6070962
+03M054,3,M054,J.H.S. 054 BOOKER T. WASHINGTON (03M054),Manhattan,D3,262,219,83.6,126,57.5,0,0,No,No,No,Top 10 in percent of test takers with offers,-73.965748,40.801079

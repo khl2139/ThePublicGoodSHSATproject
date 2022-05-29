@@ -1,0 +1,154 @@
+---
+title: "Middle School Regression Analysis"
+author: "Andrea Tillotson"
+date: "4/29/2022"
+output: pdf_document
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#libraries
+library(tidyverse)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#data
+MS_data <- readxl::read_xlsx("top_10_tested.xlsx")
+
+#wrangling
+MS_data <- MS_data %>%
+  mutate(MTF_testers = case_when(`Fewer than five test takers?` == 1 ~ 0,
+                                 `Fewer than five test takers?` == 0 ~ 1),
+         MTF_offers = case_when(`Fewer than five offers?` == 1 ~ 0,
+                                `Fewer than five offers?` == 0 ~ 1),
+         MTF_testers = as.factor(MTF_testers),
+         MTF_offers = as.factor(MTF_offers),
+         G_T = as.factor(G_T),
+         HS_Program = as.factor(HS_Program),
+         Citywide = as.factor(Citywide),
+         Borough = as.factor(Borough),
+         District = as.factor(District))
+```
+
+# Logistic Regression on More than Five Tested
+
+## Model (in logit terms): not easily interpretable
+
+This first model regresses the binary variable of whether there are **more than five testers** or not on the categorical variable of what borough a school is in.
+
+The baseline is now 0 (rather than the Bronx), so the values are relative to 0.
+
+For the Bronx coefficient: A school being in the Bronx increases the **log-odds (logit)** that the school had more than five test takers by 1.37. A logit is the ratio of two probabilities and isn't very interpretable.
+
+```{r}
+#running logit model
+logit <- glm(MTF_testers ~ 0 + Borough, family = "binomial",
+    data = MS_data)
+logit %>% summary()
+```
+
+## Odds ratios: not easily interpretable
+
+Here, I get the coefficients from above in terms of the **odds ratio** rather than log-odds (formula = $e^{ logit\:coefficient}$). Keep in mind that with odds ratios, a number less than 1 is a decrease in odds and a number greater than 1 is an increase in odds.
+
+A school being in the Bronx increases the **odds** that the school had more than five test takers by about 293.94% ($3.9394 - 1$ or $e^{logit\:coefficient} - 1$). Note, this is still not a probability but a proportionate change in odds.
+
+```{r}
+# getting odds ratios
+exp(coef(logit))
+```
+
+## Predicted probabilities: most interpretable
+
+Below, we finally arrive at predicted probabilities, which are probably the most interpretable way to report results for general audiences.
+
+As we can see, the predicted probability that a school in the Bronx has more than five test takers is about 79.75%. A school in Brooklyn's predicted probability of having more than five test takers is 79.81%. For Manhattan, the predicted probability is 73.38%, for Queens the predicted probability is 84.13%, and for Staten Island the predicted probability is 76.19%.
+
+```{r}
+
+newdata <- with(MS_data, data.frame(Borough = factor(c("Bronx", "Brooklyn", "Manhattan",
+                                                "Queens", "StatenIsland"))))
+predProb <- as.data.frame(predict(logit, newdata, type = "response")) %>%
+  magrittr::set_rownames(c("Bronx", "Brooklyn", "Manhattan", "Queens", "StatenIsland")) %>%
+  transmute(Predicted_Probabilities = `predict(logit, newdata, type = "response")`)
+
+predProb
+```
+
+# Same process for more than five offers
+
+The code here is the same as for the first model so I'll just include the output.
+
+## Model (in logit terms): not easily interpretable
+
+We can see that all the boroughs' coefficients are statistically significant for more than five offers. We also see that, even though a school being in the Bronx had **increased** its log odds of having more than five testers, it significantly **decreases** its log odds of having more than five offers. I wonder if there have been community or local efforts in the Bronx to get more students tested? But if this hasn't translated in offers.
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#running logit model
+logit_offers <- glm(MTF_offers ~ 0 + Borough, family = "binomial",
+    data = MS_data)
+logit_offers %>% summary()
+```
+
+## Odds ratios: not easily interpretable
+
+Here, we can see how significant a school being in the Bronx is for having more than five offers. A school being in the Bronx decreases the odds that the school had more than five offers takers by about 94.84% ($0.0516 - 1)$ or $e^{logit\:coefficient} - 1$). 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# getting odds ratios
+exp(coef(logit_offers))
+```
+
+## Predicted probabilities: most interpretable
+
+The predicted probability that a school in ____ has more than five offers is about ____:
+
+- Bronx, 4.91%
+- Brooklyn, 16.35%
+- Manhattan, 18.71%
+- Queens, 29.37%
+- Staten Island, 33.33%
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+predProb_offers <- as.data.frame(predict(logit_offers, newdata, type = "response")) %>%
+  magrittr::set_rownames(c("Bronx", "Brooklyn", "Manhattan", "Queens", "StatenIsland")) %>%
+  transmute(Predicted_Probabilities = `predict(logit_offers, newdata, type = "response")`)
+
+predProb_offers
+```
+
+# Linear regression for percent of pool tested against borough
+
+The Bronx is the intercept here and all other values are compared to the Bronx. Positive values for other boroughs indicate that, for schools in that borough, the percentage of the pool tested is higher on average than the Bronx schools. Negative values indicate that, for schools in that borough, the percentage of the pool tested is lower than that of the Bronx.
+
+A school being in Manhattan, for example, increases the percent of the pool tested by about 11.25 compared to the Bronx. Conversely, a school being in Staten Island decreases the average percent of the pool tested by about 2.55 compared to the Bronx.
+
+Keep in mind that this regression output does not account for schools with fewer than five test takers (see the 137 observations deleted noted in the output).
+
+```{r}
+lm(`Percent of pool tested` ~ Borough, data = MS_data) %>% summary()
+```
+
+# Linear regression for percent of test takers with offers against borough
+
+The Bronx is the intercept here and all other values are compared to the Bronx. Since all values are positive, a school in any other borough has a higher percent of test takers on average than a school in the Bronx.
+
+A school being in Manhattan, for example, increases the percent of test takers with offers by about 24.67 compared to the Bronx.
+
+Keep in mind that this regression output does not account for schools with fewer than five offers (see the 545 observations deleted noted in the output).
+
+```{r}
+lm(`Percent of test takers with offers` ~ Borough, data = MS_data) %>% summary()
+```
+
+```{r}
+qm <- MS_data %>% filter(Borough %in% c("Queens", "Manhattan"))
+qm %>% #filter(Borough == "Manhattan") %>%
+  group_by(Borough) %>%
+  count(MTF_offers) %>%
+  writexl::write_xlsx("Manhattan and Queens offer overview.xlsx")
+```
+
+```{r}
+qm_offers <- glm(MTF_offers ~ 0 + District, family = "binomial",
+    data = qm)
+qm_offers %>% summary()
+```

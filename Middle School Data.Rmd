@@ -1,0 +1,191 @@
+---
+title: "Middle School Data"
+author: "Andrea Tillotson"
+date: "3/2/2022"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+library(naniar)
+```
+
+```{r}
+middle_school <- read.csv("middle_school SHSAT 2021.xlsx - Sheet1.csv")
+```
+
+```{r}
+#middle_school <- middle_school %>% 
+#  transmute(DBN = `Feeder.School.DBN`,
+#            MS = `Feeder.School.Name`,
+#            Borough = `MS.Borough`,
+#            CSD = `MS.CommunitySchoolDistrict`,
+#            total_students = `Count.of.Students.in.HS.Admissions.Pool`,
+#            testers_count = `Count.of.Testers...3.used.to.replace.0.5.`,
+#            perc_tested = `Percentoftesttakers.topool`,
+#            total_offers = `Number.of.Offers..3.used.to.replace.0.5.`,
+#            perc_tested_offered = `Percentofoffers.to.test.takers`)
+```
+
+```{r}
+#middle_school <- middle_school %>%
+#  mutate(fof_testers = ifelse(testers_count <= 5, 1, 0),
+#         fof_offers = ifelse(total_offers <= 5, 1, 0))
+
+#writexl::write_xlsx(middle_school, "middle_school.xlsx")
+```
+
+1. District-level data that can be merged as polygon data
+
+```{r}
+#setting all fewer than five testers/offers to 0 (for a low estimate)
+middle_school <- middle_school %>%
+  mutate(testers_count0 = case_when(testers_count <= 5 ~ 0,
+                                    TRUE ~ as.numeric(testers_count)),
+         total_offers0 = case_when(total_offers <= 5 ~ 0,
+                                   TRUE ~ as.numeric(total_offers))) %>%
+  filter(DBN != "31Z000")
+```
+
+```{r}
+# calculating student total, tester count estimates, by district
+# creating the polygon data
+polygon_data <- middle_school %>% group_by(CSD) %>%
+  summarise(district_student_total = sum(total_students),
+            tester_count_high = sum(testers_count),
+            tester_count_low = sum(testers_count0),
+            total_offered_high = sum(total_offers),
+            total_offered_low = sum(total_offers0),
+            total_fof_testers = sum(fof_testers),
+            total_fof_offers = sum(fof_offers),
+            avg_perc_tested = tester_count_low / district_student_total * 100,
+            avg_perc_offered = total_offered_low / tester_count_low * 100) %>%
+  mutate_at(vars(avg_perc_tested, avg_perc_offered), funs(round(., 1)))
+
+polygon_data$avg_perc_tested[is.nan(polygon_data$avg_perc_tested)] <- NA
+polygon_data$avg_perc_offered[is.nan(polygon_data$avg_perc_offered)] <- NA
+
+polygon_data <- polygon_data %>% separate(col = CSD, into = c("D", "dist_num"),
+                          sep = 1, remove = FALSE, convert = TRUE) %>%
+  select(-D) %>%
+  mutate(dist_num = case_when(dist_num == "harter" ~ 84,
+                              TRUE ~ as.numeric(dist_num)))
+
+#writexl::write_xlsx(polygon_data, "polygon_data.xlsx")
+#readr::write_csv(polygon_data, "polygon_data.csv")
+```
+
+2. Point data with interesting summary statistics
+
+```{r}
+#creating point data
+point_data <- middle_school %>%
+  select(-c(testers_count0, total_offers0)) %>%
+  mutate(
+    testers_count = case_when(testers_count == 3 ~ "0-5", #shifting the '3' tester estimate to 0-5, as it was originally
+                              TRUE ~ as.character(testers_count)),
+    total_offers = case_when(total_offers == 3 ~ "0-5", #shifting the '3' offer estimate to 0-5, as it was originally
+                             TRUE ~ as.character(total_offers)),
+    perc_tested = round(as.numeric(testers_count) / total_students * 100, 1),
+    perc_tested_offered = round(as.numeric(total_offers) / 
+                                  as.numeric(testers_count) * 100, 1),
+    Borough = case_when(Borough == "Staten Island" ~ "StatenIsland",
+                        TRUE ~ as.character(Borough)))
+
+point_data <- point_data %>% separate(col = DBN, into = c("Dist", "loc_code"),
+                        sep = 2, remove = FALSE, convert = TRUE)
+
+#writexl::write_xlsx(point_data, "point_data.xlsx")
+#readr::write_csv(point_data, "point_data.csv")
+```
+
+# Charter Schools
+
+```{r}
+charter_borough <- middle_school %>%
+  filter(CSD == "Charter") %>% #filtering for Charter schools only
+  group_by(Borough) %>%
+  summarise(borough_total = sum(total_students), #summary statistics for Charter schools
+            tester_count_high = sum(testers_count), #by borough
+            tester_count_known = sum(testers_count0),
+            total_offered_high = sum(total_offers),
+            total_offered_known = sum(total_offers0),
+            total_fof_testers = sum(fof_testers),
+            total_fof_offers = sum(fof_offers)) #,
+           # avg_perc_tested = tester_count_known / total_students * 100,
+          #  avg_perc_offered = total_offered_known / tester_count_known * 100) %>%
+ # mutate_at(vars(avg_perc_tested, avg_perc_offered), funs(round(., 1)))
+
+charter_borough <- charter_borough %>% #percentages of pool tested and offers from testers
+  mutate(perc_tested = tester_count_known / borough_total * 100,
+         perc_offered = total_offered_known / tester_count_known * 100) %>%
+  mutate_at(vars(perc_tested, perc_offered), funs(round(., 1)))
+
+#writexl::write_xlsx(charter_borough, "charter_borough.xlsx")
+#readr::write_csv(charter_borough, "charter_borough.csv")
+```
+
+# Dealing with missing data
+
+```{r}
+point_merged <- readr::read_csv("point_data_as_csv.csv") %>%
+  select(4, 18:32)
+
+#pulling out only the observations missing location data
+missing <- anti_join(point_data, point_merged, by = c("loc_code" = "LOC_CODE"))
+
+#writexl::write_xlsx(missing, "missing.xlsx")
+
+# number of missing points by district
+miss_dist <- missing %>%
+  group_by(Dist) %>%
+  count(Dist)
+
+#writexl::write_xlsx(miss_dist, "missing_by_district.xlsx")
+
+#number of missing points by borough
+missing %>% group_by(Borough) %>%
+  count(Borough)
+
+#missing by whether the school has fewer than five test takers
+missing %>% group_by(fof_testers) %>%
+  count(fof_testers)
+
+#missing by whether the school has fewer than five offers
+missing %>% group_by(fof_offers) %>%
+  count(fof_offers)
+```
+
+
+```{r}
+miss <- readxl::read_xlsx("missing.xlsx")
+ms_dict <- read_csv("2021_DOE_Middle_School_Directory.csv") %>%
+  select(district, schooldbn, name, address)
+```
+
+```{r}
+# getting the address for some of the missing data from the DOE Middle School directory
+test_miss <- inner_join(miss, ms_dict, by = c("DBN" = "schooldbn")) %>%
+  separate(address, sep = ", ", into = c("address", "city", "state")) %>%
+  separate(state, sep = " ", into = c("state", "zip")) %>%
+  select(-c(district, name))
+
+#write_csv(test_miss, "test_miss.csv")
+```
+
+```{r}
+#getting the observations that are still missing after joining with the directory
+still_miss <- anti_join(miss, ms_dict, by = c("DBN" = "schooldbn"))%>%
+  mutate(address = NA,
+         city = NA,
+         state = "NY",
+         zip = NA)
+```
+
+```{r}
+still_miss <- readxl::read_xlsx("still_miss.xlsx")
+
+full_missing <- rbind(still_miss, test_miss)
+
+#write_csv(full_missing, "full_missing.csv")
+```

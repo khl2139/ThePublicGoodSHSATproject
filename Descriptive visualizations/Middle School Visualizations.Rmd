@@ -1,0 +1,86 @@
+---
+title: "Middle School Visualizations"
+author: "Andrea Tillotson"
+date: "4/1/2022"
+output: html_document
+---
+
+```{r}
+directory_full <- readxl::read_xlsx("2021_DOE_Middle_School_Directory.xlsx")
+```
+
+```{r}
+library(tidyverse)
+
+#selected variables
+directory <- directory_full %>%
+  select(commdistrict, schooldbn, name, address, admissionsmethod_prog1,
+         geappsperseat_prog1, gefilled_prog1, coursepassrate, elaprof, mathprof) %>%
+  slice(1:474)
+```
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(wesanderson)
+
+# apps per seat & admissions method
+directory %>%
+  mutate(admethod_new = case_when(
+    admissionsmethod_prog1 == "Screened: Language" ~ "Screened",
+    TRUE ~ admissionsmethod_prog1
+  )) %>%
+  ggplot(aes(admethod_new, geappsperseat_prog1,
+             color = admethod_new)) +
+  geom_jitter() +
+  labs(title = "Applications per seat\nby middle school admissions methods",
+       x = "Admissions method", y = "Applications per available seat") +
+  theme_tufte() +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5),
+        legend.position = "none") +
+  scale_color_manual(values = wes_palette("Darjeeling1", n = 5))
+
+#ggsave("AppsPerSeat by AdmissionsMethod.png")
+```
+
+```{r}
+# schools with seats filled by district
+
+directory %>%
+  subset(!is.na(gefilled_prog1)) %>%
+  mutate(commdistrict = as.factor(commdistrict)) %>%
+  ggplot(aes(commdistrict, fill = gefilled_prog1)) +
+#  geom_bar(data = subset(directory, gefilled_prog1 == "N")) +
+#  geom_bar(data = subset(directory, gefilled_prog1 == "Y")) +
+#  facet_wrap(~gefilled_prog1) + 
+  coord_flip() +
+  geom_bar() + 
+  labs(title = "Number of middle schools that filled\ngeneral admissions seats",
+       y = "# of middle schools in district", x = "District") +
+  theme_tufte() +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) +
+  scale_fill_manual(name = "Seats filled", 
+                    values = wes_palette("Darjeeling1", n = 2))
+#ggsave("Seats filled by district.png")
+```
+
+```{r}
+# course pass rate of a school against math proficiency, colored by
+# open versus screened admissions methods
+directory %>%
+  mutate(coursepassrate = as.numeric(coursepassrate)) %>%
+  filter(admissionsmethod_prog1 == c("Open", "Screened")) %>%
+  ggplot(aes(coursepassrate, mathprof, color = admissionsmethod_prog1)) +
+  geom_point() +
+  scale_color_manual(name = "Middle school\nadmissions method",
+                     values = wes_palette("GrandBudapest1", n = 2)) +
+  labs(title = "Middle schools by course pass rate and math proficiency",
+       caption = "Based on 2021 proficiency scores, which (due to the pandemic)\nwere taken by only 40% of middle schoolers.\nNormal years saw participation rates at abou 80%.",
+       x = "Course pass rate", y = "% of students proficient in math") +
+  theme_tufte() +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+#ggsave("pass rate math scores.png")
+```
+
+
+

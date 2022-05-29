@@ -1,0 +1,45 @@
+DBN,Dist,loc_code,MS,Borough,CSD,total_students,testers_count,perc_tested,total_offers,perc_tested_offered,fof_testers,fof_offers,G_T,HS_Program,Citywide,district,name,address,city,state,zip
+02M177,2,M177,YORKVILLE EAST MIDDLE SCHOOL (02M177),Manhattan,D2,73,37,50.7,0-5,NA,0,1,No,No,No,2,Yorkville East Middle School,1458 York Avenue,New York,NY,10075
+02M297,2,M297,M.S. 297 (02M297),Manhattan,D2,297,99,33.3,28,28.3,0,0,No,No,No,2,M.S. 297 (75 Morton),75 Morton Street,New York,NY,10014
+02M933,2,M933,CITY KNOLL MIDDLE SCHOOL (02M933),Manhattan,D2,41,0-5,NA,0-5,NA,1,1,No,No,No,2,City Knoll Middle School,425 West 33Rd Street,New York,NY,10001
+03M291,3,M291,WEST END SECONDARY SCHOOL (03M291),Manhattan,D3,105,29,27.6,12,41.4,0,0,No,No,No,3,West End Secondary School,227-243 West 61St Street,New York,NY,10023
+05M148,5,M148,EAGLE ACADEMY FOR YOUNG MEN OF HARLEM (05M148),Manhattan,D5,34,6,17.6,0-5,NA,0,1,No,No,No,5,Eagle Academy for Young Men of Harlem,6 Edgecombe Avenue,New York,NY,10030
+06M209,6,M209,HAMILTON GRANGE MIDDLE SCHOOL (06M209),Manhattan,D6,112,25,22.3,0-5,NA,0,1,No,No,No,6,Hamilton Grange Middle School,500 West 138 Street,New York,NY,10031
+07X584,7,X584,I.S. 584 (07X584),Bronx,D7,80,6,7.5,0-5,NA,0,1,No,No,No,7,I.S. 584,600 Saint Ann'S Avenue,Bronx,NY,10455
+08X562,8,X562,BLUEPRINT MIDDLE SCHOOL (08X562),Bronx,D8,190,46,24.2,0-5,NA,0,1,No,No,No,8,Blueprint Middle School,1111 Pugsley Avenue,Bronx,NY,10472
+09X361,9,X361,THE HIGHBRIDGE GREEN SCHOOL (09X361),Bronx,D9,115,12,10.4,0-5,NA,0,1,No,No,No,9,The Highbridge Green School,200 West 167Th Street,Bronx,NY,10452
+09X568,9,X568,YOUNG WOMEN'S LEADERSHIP SCHOOL OF THE BRONX (09X568),Bronx,D9,71,7,9.9,0-5,NA,0,1,No,No,No,9,Young Women's Leadership School of the Bronx,1865 Morris Avenue,Bronx,NY,10453
+09X593,9,X593,SOUTH BRONX INTERNATIONAL MIDDLE SCHOOL (09X593),Bronx,D9,63,0-5,NA,0-5,NA,1,1,No,No,No,9,South Bronx International Middle School,1000 Teller Avenue,Bronx,NY,10456
+09X594,9,X594,M.S. 594 (09X594),Bronx,D9,88,8,9.1,0-5,NA,0,1,No,No,No,9,New Pathways Academy,1000 Teller Avenue,Bronx,NY,10456
+11X355,11,X355,BRONX ALLIANCE MIDDLE SCHOOL (11X355),Bronx,D11,80,9,11.2,0-5,NA,0,1,No,No,No,11,Bronx Alliance Middle School,3750 Baychester Avenue,Bronx,NY,10466
+11X556,11,X556,BRONX PARK MIDDLE SCHOOL (11X556),Bronx,D11,141,23,16.3,0-5,NA,0,1,No,No,No,11,Bronx Park Middle School,2441 Wallace Avenue,Bronx,NY,10467
+11X566,11,X566,PELHAM GARDENS MIDDLE SCHOOL (11X566),Bronx,D11,148,21,14.2,0-5,NA,0,1,No,No,No,11,Pelham Gardens Middle School,2545 Gunther Avenue,Bronx,NY,10469
+13K351,13,K351,THE URBAN ASSEMBLY UNISON SCHOOL (13K351),Brooklyn,D13,51,10,19.6,0-5,NA,0,1,No,No,No,13,The Urban Assembly Unison School,170 Gates Avenue,Brooklyn,NY,11238
+13K915,13,K915,I.S. 915 (13K915),Brooklyn,D13,80,30,37.5,8,26.7,0,0,No,No,No,13,MS 915,105 Tech Place,Brooklyn,NY,11201
+15K839,15,K839,M.S. 839 (15K839),Brooklyn,D15,109,25,22.9,6,24,0,0,No,No,No,15,M.S. 839,713 Caton Avenue,Brooklyn,NY,11218
+16K681,16,K681,MADIBA PREP MIDDLE SCHOOL (16K681),Brooklyn,D16,68,23,33.8,0-5,NA,0,1,No,No,No,16,Madiba Prep Middle School,1014 Lafayette Avenue,Brooklyn,NY,11221
+16K898,16,K898,THE BROOKLYN GREEN SCHOOL (16K898),Brooklyn,D16,41,14,34.1,0-5,NA,0,1,No,No,No,16,The Brooklyn Green School,130 Rochester Avenue,Brooklyn,NY,11213
+17K722,17,K722,NEW HEIGHTS MIDDLE SCHOOL (17K722),Brooklyn,D17,94,12,12.8,0-5,NA,0,1,No,No,No,17,New Heights Middle School,790 East New York Avenue,Brooklyn,NY,11203
+18K763,18,K763,BROOKLYN SCIENCE AND ENGINEERING ACADEMY (18K763),Brooklyn,D18,115,31,27,0-5,NA,0,1,No,No,No,18,Brooklyn Science and Engineering Academy,5404 Tilden Avenue,Brooklyn,NY,11203
+19K422,19,K422,SPRING CREEK COMMUNITY SCHOOL (19K422),Brooklyn,D19,67,0-5,NA,0-5,NA,1,1,No,No,No,19,Spring Creek Community School,1065 Elton Street,Brooklyn,NY,11208
+19K654,19,K654,VAN SICLEN COMMUNITY MIDDLE SCHOOL (19K654),Brooklyn,D19,105,0-5,NA,0-5,NA,1,1,No,No,No,19,Van Siclen Community Middle School,800 Van Siclen Ave,Brooklyn,NY,11207
+19K661,19,K661,VISTA ACADEMY (19K661),Brooklyn,D19,153,21,13.7,0-5,NA,0,1,No,No,No,19,Vista Academy,350 Linwood Street,Brooklyn,NY,11208
+19K662,19,K662,LIBERTY AVENUE MIDDLE SCHOOL (19K662),Brooklyn,D19,162,22,13.6,0-5,NA,0,1,No,No,No,19,Liberty Avenue Middle School,350 Linwood Street,Brooklyn,NY,11208
+19K663,19,K663,SCHOOL OF THE FUTURE BROOKLYN (19K663),Brooklyn,D19,54,0-5,NA,0-5,NA,1,1,No,No,No,19,School of the Future Brooklyn,574 Dumont Avenue,Brooklyn,NY,11207
+19K760,19,K760,HIGHLAND PARK COMMUNITY SCHOOL (19K760),Brooklyn,D19,102,20,19.6,0-5,NA,0,1,No,No,No,19,Highland Park Community School,528 Ridgewood Avenue,Brooklyn,NY,11208
+19K907,19,K907,LEGACY SCHOOL OF THE ARTS (19K907),Brooklyn,D19,43,6,14,0-5,NA,0,1,No,No,No,19,Legacy School of the Arts,590 Sheffield Avenue,Brooklyn,NY,11207
+22K890,22,K890,M.S. 890 (22K890),Brooklyn,D22,95,32,33.7,0-5,NA,0,1,No,No,No,22,M.S. 890,21 Hinckley Place,Brooklyn,NY,11218
+23K363,23,K363,BROWNSVILLE COLLABORATIVE MIDDLE SCHOOL (23K363),Brooklyn,D23,93,8,8.6,0-5,NA,0,1,No,No,No,23,Brownsville Collaborative Middle School,85 Watkins Street,Brooklyn,NY,11212
+23K664,23,K664,BROOKLYN ENVIRONMENTAL EXPLORATION SCHOOL (BEES) (23K664),Brooklyn,D23,56,0-5,NA,0-5,NA,1,1,No,No,No,23,Brooklyn Environmental Exploration School,251 Mac Dougal Street,Brooklyn,NY,11233
+23K668,23,K668,RIVERDALE AVENUE MIDDLE SCHOOL (23K668),Brooklyn,D23,42,8,19,0-5,NA,0,1,No,No,No,23,Riverdale Avenue Middle School,76 Riverdale Avenue,Brooklyn,NY,11212
+24Q311,24,Q311,CORONA ARTS & SCIENCES ACADEMY (24Q311),Queens,D24,183,12,6.6,0-5,NA,0,1,No,No,No,24,Corona Arts & Sciences Academy,98-11 44Th Avenue,Queens,NY,11368
+25Q379,25,Q379,COLLEGE POINT COLLABORATIVE (25Q379),Queens,D25,151,40,26.5,0-5,NA,0,1,No,No,No,25,College Point Collaborative,12406 14Th Avenue,Queens,NY,11356
+27Q297,27,Q297,HAWTREE CREEK MIDDLE SCHOOL (27Q297),Queens,D27,126,26,20.6,0-5,NA,0,1,No,No,No,27,Hawtree Creek Middle School,121-10 Rockaway Boulevard,Queens,NY,11420
+28Q287,28,Q287,THE EMERSON SCHOOL (28Q287),Queens,D28,116,25,21.6,0-5,NA,0,1,No,No,No,28,The Emerson School,108-35 167 Street,Queens,NY,11433
+28Q332,28,Q332,REDWOOD MIDDLE SCHOOL (28Q332),Queens,D28,100,25,25,0-5,NA,0,1,No,No,No,28,Redwood Middle School,133-25 Guy R Brewer Boulevard,Queens,NY,11434
+28Q358,28,Q358,M.S. 358 (28Q358),Queens,D28,125,42,33.6,0-5,NA,0,1,No,No,No,28,M.S. 358,88-08 164Th Street,Queens,NY,11432
+29Q289,29,Q289,QUEENS UNITED MIDDLE SCHOOL (29Q289),Queens,D29,54,13,24.1,0-5,NA,0,1,No,No,No,29,Queens United Middle School,229-02 137 Avenue,Queens,NY,11413
+30Q291,30,Q291,HUNTERS POINT COMMUNITY MIDDLE SCHOOL (30Q291),Queens,D30,146,100,68.5,6,6,0,0,No,No,No,30,Hunters Point Community Middle School,1-50 51St Avenue,Queens,NY,11101
+30Q300,30,Q300,THE 30TH AVENUE SCHOOL (G&T CITYWIDE) (30Q300),Queens,D30,46,42,91.3,24,57.1,0,0,Yes,No,Yes,30,The 30th Avenue School,28-37 29 Street,Queens,NY,11102
+31R028,31,R028,THE EAGLE ACADEMY FOR YOUNG MEN OF STATEN ISLAND (31R028),StatenIsland,D31,69,8,11.6,0-5,NA,0,1,No,No,No,31,The Eagle Academy for Young Men of Staten Island,101 Warren Street,Staten Island,NY,10304
+32K562,32,K562,EVERGREEN MIDDLE SCHOOL FOR URBAN EXPLORATION (32K562),Brooklyn,D32,120,20,16.7,0-5,NA,0,1,No,No,No,32,Evergreen Middle School for Urban Exploration,125 Covert Street,Brooklyn,NY,11207
