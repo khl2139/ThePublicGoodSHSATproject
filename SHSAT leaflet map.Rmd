@@ -39,15 +39,37 @@ library(ggmap)
 points_geo <- readxl::read_xlsx("points_geo.xlsx")
 ```
 
+
+```{r}
+#adding school district boundaries 
+library(rgdal)
+school_districts = readOGR(dsn="./shapefiles/polygon data/3_13/.", verbose=FALSE)
+
+
+
+```
+
+```{r}
+school_districts <- spTransform(school_districts, CRS("+proj=longlat +ellps=GRS80"))
+```
+
+
+```{r}
+leaflet() %>% addTiles() %>% 
+  addPolygons(data=school_districts, weight=1, col='#333333', smoothFactor = 0.5, fillColor = ~colorQuantile("YlOrRd", tester_count_high)(tester_count_high), fillOpacity = 0.3)
+```
+
+
+
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(leaflet)
 
 points_geo <- points_geo %>% mutate(offers = case_when(
-  fof_offers == 1 ~ "Five or fewer offers to specialized high schools",
-  fof_offers == 0 ~ "More than five offers to specialized high schools"
+  fof_offers == 1 ~ "Five or fewer",
+  fof_offers == 0 ~ "More than five"
 ))
 
-pal <- colorFactor("Dark2", domain = points_geo$offers)
+pal <- colorFactor("Set1", domain = points_geo$offers)
 color_offers <- pal(points_geo$offers)
 content <- paste("<font size ='+1'><b>Middle School:</b><br/>", points_geo$MS, "<br/</font size><br/>",
                  "<b>Borough:</b>", points_geo$Borough,"<br/>",
@@ -58,11 +80,58 @@ content <- paste("<font size ='+1'><b>Middle School:</b><br/>", points_geo$MS, "
                  "<b>High school program?</b>", points_geo$HS_Program, "<br/>",
                  "<b>Serves citywide?</b>", points_geo$Citywide, "<br/>")
 
+library(htmltools)
+
+tag.map.title1 <- tags$style(HTML("
+  .leaflet-control.map-title { 
+    transform: translate(-50%,20%);
+    position: fixed !important;
+    left: 50%;
+    text-align: center;
+    padding-left: 10px; 
+    padding-right: 10px; 
+    background: rgba(0,128,128,0.3);
+    font-weight: bold;
+    font-size: 15px;
+  }
+"))
+
+title1 <- tags$div(
+  tag.map.title1, HTML("NYC middle schools and SHSAT offers to Specialised High schools")
+)
+```
+
+
+```{r}
+#polygon data 
+#left_join by CSD
+
+combine <- school_districts@data %>% 
+  left_join(polygon_data, by = c(CSD = "CSD"))
+
+school_districts@data <- combine
+
+```
+
+```{r}
+head(school_districts@data)
+polygon_data <- read_csv("polygon_data.csv")
+head(polygon_data)
+
+```
+
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 leaflet(points_geo) %>%
-  addProviderTiles("Stamen.TonerLite") %>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
   addCircles(color = color_offers, popup = content,
              lat = ~lat, lng = ~lon) %>%
   addLegend(position = "bottomleft", opacity = 1,
-            pal = pal, values = ~points_geo$offers,
-            title = "<font size = +2>NYC middle schools and SHSAT offers</font size>")
+            pal = pal, values = ~points_geo$offers, title="Offers") %>% 
+  addControl(title1, position="topleft", className="map-title") %>% 
+      addPolygons(data=school_districts, weight=1, col='#333333', smoothFactor = 0.5, fillColor = ~colorQuantile("YlGnBu", tester_count_high)(tester_count_high), fillOpacity = 0.3,
+                 label = ~stringr::str_c(CSD, ' ', formatC(tester_count_high, big.mark = ',', format='d')),
+                 labelOptions = labelOptions(direction='auto'))
+
 ```
