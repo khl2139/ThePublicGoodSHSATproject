@@ -1,0 +1,228 @@
+---
+title: "CSD_map(layers)"
+author: "Mandi Lee"
+date: "6/3/2022"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# points <- read.csv("point_data.csv")
+# points_add <- read.csv("point_data_as_csv.csv") %>%
+#   unite("Full_Address", 10:12, sep = ", ", remove = FALSE) %>%
+#   select(DBN, Full_Address)
+# test <- read.csv("full_missing.csv") %>%
+#   unite("Full_Address", c(17, 19:20), sep = ", ", remove = FALSE) %>%
+#   select(DBN, Full_Address)
+# 
+# full_add <- rbind(points_add, test)
+# 
+# points <- points %>% left_join(full_add)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(ggmap)
+
+#points_geo <- points %>%
+#  mutate_geocode(Full_Address)
+
+#points_geo <- points_geo %>%
+#  mutate(latitute = lat,
+#         longitude = lon)
+
+#writexl::write_xlsx(points_geo, "points_geo.xlsx")
+
+points_geo <- readxl::read_xlsx("points_geo.xlsx")
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#adding school district boundaries 
+library(rgdal)
+school_districts = readOGR(dsn="./shapefiles/polygon data/3_13/.", verbose=FALSE)
+
+```
+
+
+```{r,echo = FALSE, warning = FALSE, message = FALSE}
+school_districts <- spTransform(school_districts, CRS("+proj=longlat +ellps=GRS80"))
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#polygon data 
+#left_join by CSD
+library(dplyr)
+polygon_data <- read.csv("polygon_data_new.csv")
+combine <- school_districts@data %>% 
+  left_join(polygon_data, by = c(CSD = "CSD"))
+
+school_districts@data <- combine
+
+```
+
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# library(leaflet)
+# districts <- leaflet() %>% addTiles() %>% 
+#   addPolygons(data=school_districts, weight=1, col='#333333', smoothFactor = 0.5, fillColor = ~colorQuantile("YlOrRd", all_percent_tested)(all_percent_tested), fillOpacity = 0.3)
+# 
+# districts
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#student population (population density)
+#creating density var
+# n_schools<-points_geo %>% 
+#   group_by(CSD) %>% 
+#   mutate(n_school=n()) %>% 
+#   select(n_school)
+# 
+# 
+# n_schools<- distinct(n_schools)
+# library(dplyr)
+# school_districts@data<- left_join(school_districts@data, n_schools)
+#   
+# school_districts@data<- school_districts@data %>% 
+#   mutate(density = district_student_total/ n_school)
+
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE} 
+# districts_density <- leaflet() %>%
+#   addProviderTiles(providers$CartoDB.Positron) %>% 
+#   addPolygons(data=school_districts, weight=1, col='#333333', smoothFactor = 0.5, fillColor = ~colorQuantile("YlOrRd", density)(density), fillOpacity = 0.3)
+# districts_density
+```
+
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(leaflet)
+
+points_geo <- points_geo %>% mutate(offers = case_when(
+  fof_offers == 1 ~ "Five or fewer",
+  fof_offers == 0 ~ "More than five"
+))
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+points_geo_2 <- subset(points_geo, fof_offers!="1")
+
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#layer 1
+pal <- colorFactor("Set1", domain = points_geo$offers)
+color_offers <- pal(points_geo$offers)
+content <- paste("<font size ='+1'><b>Middle School:</b><br/>", points_geo$MS, "<br/</font size><br/>",
+                 "<b>Borough:</b>", points_geo$Borough,"<br/>",
+                 "<b>Students in testing pool:</b>", points_geo$total_students,"<br/>",
+                 "<b># of students tested:</b>", points_geo$testers_count,"<br/>",
+                 "<b># of students offered spots:</b>", points_geo$total_offers, "<br/>",
+                 "<b>Gifted and talented?</b>", points_geo$G_T, "<br/>",
+                 "<b>High school program?</b>", points_geo$HS_Program, "<br/>",
+                 "<b>Serves citywide?</b>", points_geo$Citywide, "<br/>")
+
+
+
+#layer 2
+
+library(RColorBrewer)
+
+green <- brewer.pal(11, "Greens") %>% rev()
+schoolColour <- colorBin(green, as.numeric(points_geo_2$total_offers))
+
+#title
+library(htmltools)
+tag.map.title1 <- tags$style(HTML("
+  .leaflet-control.map-title { 
+    transform: translate(-50%,20%);
+    position: fixed !important;
+    left: 30%;
+    text-align: center;
+    padding-left: 10px; 
+    padding-right: 10px; 
+    background: rgba(0, 51, 102, 0.5);
+    font-weight: bold;
+    font-size: 15px;
+    color: white; 
+  }
+"))
+
+
+title1 <- tags$div(
+  tag.map.title1, HTML("Offers to Specialised High schools")
+)
+
+#polygon
+pal_poly <- colorNumeric(palette="RdYlGn", domain=school_districts@data$all_percent_offered)
+
+
+
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+
+
+#icon
+
+schools <- icons(
+  iconUrl = "icon.jpeg",
+  iconWidth = as.numeric(points_geo_2$total_offers)/3, iconHeight = as.numeric(points_geo_2$total_offers)/3,
+  iconAnchorX = 7.5, iconAnchorY = 8.5
+)
+
+CSD_map <- leaflet(points_geo) %>%
+
+  #base layer
+  addProviderTiles(providers$CartoDB.Positron, group="CartoDB") %>% 
+  addLegend(position = "bottomright", opacity = 0.8, pal=pal_poly, values= ~school_districts$all_percent_offered, title="% Offers", labFormat = labelFormat(suffix = "%")) %>% 
+  addPolygons(data=school_districts, weight=1, col='#333333', smoothFactor = 0.5, fillColor = ~colorQuantile("RdYlGn", all_percent_offered)(all_percent_offered), fillOpacity = 0.3,
+                 label = ~stringr::str_c(CSD),
+                 labelOptions = labelOptions(direction='auto'),   highlightOptions = highlightOptions( 
+          color='#45FFFF', weight = 2.9, 
+          bringToFront = TRUE, sendToBack = TRUE),
+            popup = paste("District:",school_districts$dist_num,"<br/>",
+     "Percentage of SHSAT testers:", school_districts$all_percent_tested, "<br/>",
+     "Percentage of SHSAT offers:", school_districts$all_percent_offered, "<br/>",
+     "Number of total students:",  school_districts$district_student_total), group = "School Districts") %>%
+  #OVERLAY 
+  addCircles(color = color_offers, popup = content,
+             lat = ~lat, lng = ~lon, group= "Offer Threshold: 5") %>%
+  addCircleMarkers(data=points_geo_2, weight=0, 
+                   radius=~ as.numeric(total_offers)/6,
+                   fillOpacity=0.7, color=~schoolColour(as.numeric(total_offers)),
+                   popup=~paste("Name: ",MS,"<br>
+                                No. of Offers: ", total_offers), group="High performing schools") %>% 
+  addMarkers(data= points_geo_2, icon=schools, popup = ~paste("Name:",MS, "No. of offers", total_offers ), group = "Icon") %>% 
+  addLegend(position = "bottomleft", opacity = 0.8,
+            pal = pal, values = ~points_geo$offers, title="No. of Offers") %>%
+  addControl(title1, className="map-title") %>% 
+  #layers control
+  addLayersControl(
+    overlayGroups = c("School Districts", "Offer Threshold: 5","High performing schools", "Icon"),
+    options= layersControlOptions(collapsed = FALSE, position="bottomleft")
+  )
+
+# # # save a stand-alone, interactive map as an html file
+#library(htmlwidgets)
+#saveWidget(widget = CSD_map, file = 'SHSAT_school_districts_map.html', selfcontained = T)
+
+#install.packages("mapview")
+#library(mapview)
+#mapshot(CSD_map, file = 'school_districts_map.png')
+
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+CSD_map
+```
+
